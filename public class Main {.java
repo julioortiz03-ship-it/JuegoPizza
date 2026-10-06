@@ -52,9 +52,13 @@ class Orden {
 }
 
 class Cocina {
+
+ private Orden[] ordenes = new Orden[5];
+
     boolean entregar(Orden orden, Pizza miPizza) {
         if (orden.pizzaPedida.tamano == miPizza.tamano &&
             orden.pizzaPedida.ingredientes.equals(miPizza.ingredientes)) {
+
             System.out.println("Orden correcta para " + orden.cliente);
             return true;
         } else {
