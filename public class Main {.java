@@ -53,7 +53,8 @@ class Orden {
 
 class Cocina {
 
- private Orden[] ordenes = new Orden[5];
+    private Orden[] ordenes = new Orden[5];
+
 
     boolean entregar(Orden orden, Pizza miPizza) {
         if (orden.pizzaPedida.tamano == miPizza.tamano &&
