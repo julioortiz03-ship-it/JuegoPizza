@@ -39,7 +39,7 @@ class Orden {
     }
 
     static Orden crearAleatoria() {
-        String[] nombres = {"Julio", "Maria", "Carlos"};
+        String[] nombres = {"Julio", "Maria", "Carlos", "Tiago"};
         Random r = new Random();
 
         Pizza.Tamano t = Pizza.Tamano.values()[r.nextInt(Pizza.Tamano.values().length)];
@@ -52,11 +52,21 @@ class Orden {
 }
 
 class Cocina {
-
     private Orden[] ordenes = new Orden[5];
+    private int indiceOrden = 0;
 
+    void registrarOrden(Orden orden) {
+        if (indiceOrden < ordenes.length) {
+            ordenes[indiceOrden] = orden;
+            indiceOrden++;
+        } else {
+            System.out.println("La cocina está llena. No se puede registrar más órdenes.");
+        }
+    }
 
     boolean entregar(Orden orden, Pizza miPizza) {
+        registrarOrden(orden);
+
         if (orden.pizzaPedida.tamano == miPizza.tamano &&
             orden.pizzaPedida.ingredientes.equals(miPizza.ingredientes)) {
 
