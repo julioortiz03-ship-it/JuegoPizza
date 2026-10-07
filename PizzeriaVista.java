@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class PizzeriaVista {
     public static void main(String[] args) {
@@ -9,7 +8,7 @@ public class PizzeriaVista {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout(10, 10));
 
-        Orden[] orden = { Orden.crearAleatoria() };
+        Orden[] orden = { Orden.crearSiguiente() };
         JLabel lblOrden = new JLabel(orden[0].toString(), SwingConstants.CENTER);
         frame.add(lblOrden, BorderLayout.NORTH);
 
@@ -54,7 +53,7 @@ public class PizzeriaVista {
         });
 
         btnNueva.addActionListener(e -> {
-            orden[0] = Orden.crearAleatoria();
+            orden[0] = Orden.crearSiguiente();
             lblOrden.setText(orden[0].toString());
             resultado.setText("Nueva orden");
             chk1.setSelected(false); chk2.setSelected(false);
@@ -63,7 +62,7 @@ public class PizzeriaVista {
 
         frame.add(campos, BorderLayout.CENTER);
         frame.add(sur, BorderLayout.SOUTH);
-        frame.setSize(500, 250);
+        frame.setSize(550, 280);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
@@ -71,7 +70,7 @@ public class PizzeriaVista {
 
 class Pizza {
     enum Tamano { PEQUEÑA, MEDIANA, GRANDE }
-    enum Ingrediente { PEPPERONI, JAMON, CHAMPINONES, JAMON_CERRANO , QUESO }
+    enum Ingrediente { PEPPERONI, JAMON, CHAMPINONES, JAMON_CERRANO, QUESO }
     Tamano tamano;
     java.util.List<Ingrediente> ingredientes = new ArrayList<>();
     Pizza(Tamano t) { tamano = t; }
@@ -84,13 +83,36 @@ class Orden {
     String cliente;
     Pizza pizzaPedida;
     Orden(String c, Pizza p) { cliente = c; pizzaPedida = p; }
-    static Orden crearAleatoria() {
-        String[] n = {"Julio", "Maria", "Carlos", "Tiago"};
-        Random r = new Random();
-        Pizza p = new Pizza(Pizza.Tamano.values()[r.nextInt(3)]);
-        p.agregar(Pizza.Ingrediente.values()[r.nextInt(5)]);
-        p.agregar(Pizza.Ingrediente.QUESO);
-        return new Orden(n[r.nextInt(4)], p);
+
+    private static int turno = 0;
+
+    static Orden crearSiguiente() {
+        Pizza p;
+        Orden o;
+        if (turno == 0) {
+            p = new Pizza(Pizza.Tamano.PEQUEÑA);
+            p.agregar(Pizza.Ingrediente.PEPPERONI);
+            p.agregar(Pizza.Ingrediente.QUESO);
+            o = new Orden("Julio", p);
+        } else if (turno == 1) {
+            p = new Pizza(Pizza.Tamano.MEDIANA);
+            p.agregar(Pizza.Ingrediente.JAMON);
+            p.agregar(Pizza.Ingrediente.QUESO);
+            o = new Orden("Maria", p);
+        } else if (turno == 2) {
+            p = new Pizza(Pizza.Tamano.GRANDE);
+            p.agregar(Pizza.Ingrediente.CHAMPINONES);
+            p.agregar(Pizza.Ingrediente.QUESO);
+            o = new Orden("Carlos", p);
+        } else {
+            p = new Pizza(Pizza.Tamano.MEDIANA);
+            p.agregar(Pizza.Ingrediente.JAMON_CERRANO);
+            p.agregar(Pizza.Ingrediente.QUESO);
+            o = new Orden("Tiago", p);
+        }
+        turno = (turno + 1) % 4;
+        return o;
     }
+
     public String toString() { return cliente + " quiere: " + pizzaPedida; }
 }
